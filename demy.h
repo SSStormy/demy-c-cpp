@@ -32,7 +32,10 @@ void demy_tr_iter_next(demy_node_iterator **ptr_to_iter);
 
 void demy_tr_iter_end(demy_node_iterator *iter);
 
+// TODO : rethink iterators
 const demy_node* demy_tr_iter_get(demy_node_iterator *iter);
+
+bool demy_tr_iter_are_eq(demy_node_iterator *a, demy_node_iterator *b);
 
 bool demy_node_update_at(demy_track *track, unsigned int time, const demy_node *node);
 

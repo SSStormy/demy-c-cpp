@@ -31,14 +31,20 @@ namespace Demy
 
         public:
 
+        // TODO : rethink iterators
             class iterator 
             {
                 demy_node_iterator *_c_iter;
                 public:
+                    using difference_type = std:ptrdiff_t;
+                    using value_type = Node;
+                    using pointer = const *Node;
+                    using reference = const &Node;
+                    using iterator_category = std::forward_iterator_tag;
+
                     iterator(demy_node_iterator *iter) : _c_iter(iter) {}
                     iterator& operator++() { demy_tr_iter_next(&_c_iter); return *this; }
-                    bool operator==(iterator other) const { return other.
-                        // TODO : Iter
+                    bool operator==(const iterator& other) const { return demy_tr_iter_are_eq(this, &other); }
             }
 
 
@@ -50,6 +56,12 @@ namespace Demy
             bool AddNode(unsigned int time, double value, InterpType interp);
             bool DeleteNode(unsigned int time);
             bool GetNode(unsigned int time, Node &outNode);
+
+            iterator begin()
+            { return iterator(demy_tr_iter_start(_c_tr); }
+
+            iterator end()
+            { return iterator(demy_tr_iter_
             
     };
 
