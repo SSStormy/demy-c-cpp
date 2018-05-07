@@ -38,6 +38,7 @@ namespace Demy
                     iterator(demy_node_iterator *iter) : _c_iter(iter) {}
                     iterator& operator++() { demy_tr_iter_next(&_c_iter); return *this; }
                     bool operator==(iterator other) const { return other.
+                        // TODO : Iter
             }
 
 
@@ -55,19 +56,22 @@ namespace Demy
     class Node 
     {
         const demy_node *_c_node;
+        bool _is_owned;
 
         public:
-            Node(const demy_node *node);
+            Node();
+            Node(const Node &oth);
+            Node(const demy_node *node, bool is_owned);
             ~Node();
 
-            void SetInterpolation();
-            void GetInterpolation();
+            void SetInterpolation(InterpType interp);
+            InterpType GetInterpolation();
 
-            void SetTime();
-            void GetTime();
+            void SetTime(unsigned int time);
+            unsigned int GetTime();
 
-            void SetValue();
-            void GetValue();
+            void SetValue(double value);
+            double GetValue();
 
             demy_node* GetCPtr();
     };
@@ -76,6 +80,63 @@ namespace Demy
 #endif // DEMCPPY_H
 
 #ifdef DEMCPPY_IMPLEMENTATION
+
+Demy::Node Demy::Node(unsigned int time, double value, InterpType interp)
+    : _c_node(demy_node_new(time, value, interp)),
+    _is_owned(true)
+{
+}
+
+Demy::Node Demy::Node(const Node &oth)
+    : _c_node(demy_node_clone(oth.GetCPtr()),
+    _is_owned(true)
+{
+
+}
+
+Demy::Node Demy::Node(const demy_node *node, bool is_owned)
+    : _c_node(node),
+    _is_owned(is_owned)
+{
+}
+
+~Demy::Node Demy::Node()
+{
+    if(_is_owned)
+    {
+        demy_node_free(_c_node);
+    }
+}
+
+void Demo::Node::SetInterpolation(InterpType interp)
+{
+    demy_node_set_interp(_c_node, interp);
+}
+
+InterpType Demo::Node::GetInterpolation()
+{
+    return demy_node_get_interp(_c_node);
+}
+
+void Demo::Node::SetTime(unsigned int time)
+{
+    demy_node_set_time(_c_node, time);
+}
+
+unsigned int Demo::Node::GetTime()
+{
+    return demy_node_get_time(_c_node);
+}
+
+void Demo::Node::SetValue(double value)
+{
+    demy_node_set_value(_c_node, value);
+}
+
+double Demo::Node::GetValue()
+{
+    return demy_node_get_value(_c_node);
+}
 
 Demy::Timeline Demy::Timeline()
     _c_tl(0)

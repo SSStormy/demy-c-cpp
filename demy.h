@@ -42,4 +42,20 @@ demy_node* demy_node_new(unsigned int time, double value, interp_t interp);
 
 void demy_node_free(demy_node *node);
 
+void demy_tl_save(demy_timeline *tl, const char* path);
+
+bool demy_tl_load(demy_timeline *tl, const char* path);
+
+void demy_node_set_interp(demy_node *node, InterpType interp);
+
+InterpType demy_node_get_interp(demy_node *node);
+
+void demy_node_set_value(demy_node *node, double value);
+
+double demy_node_get_value(demy_node *node);
+
+void demy_node_set_time(demy_node *node, unsigned int time);
+
+unsigned int demy_node_get_time(demy_node *node);
+
 #endif // DEMY_H
