@@ -16,7 +16,7 @@ demy_timeline* demy_tl_new();
 
 void demy_tl_free(demy_timeline* tl);
 
-const demy_track* demy_tl_track_get(demy_timeline* tl);
+const demy_track* demy_tl_track_get(demy_timeline* tl, const char *name);
 
 bool demy_tl_track_del(demy_timeline *tl, const char *name);
 

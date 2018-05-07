@@ -38,12 +38,11 @@ namespace Demy
                     iterator(demy_node_iterator *iter) : _c_iter(iter) {}
                     iterator& operator++() { demy_tr_iter_next(&_c_iter); return *this; }
                     bool operator==(iterator other) const { return other.
-
             }
 
 
             Track(demy_track *tr);
-            ~Track();
+            ~Track() = default;
 
             demy_track* GetCPtr();
 
@@ -100,10 +99,45 @@ Demy::Timeline::GetCPtr()
 
 Demy::Track Demy::Timeline::GetTrack(const std::string &name)
 {
+    return Demy::Track(demy_tr_track_get(_c_tl, name.c_str());
 }
 
 bool Demy::Timeline::DeleteTrack(const std::string &name)
 {
+    return demy_tr_track_del(_c_tl, name.c_str());
+}
+
+Demy::Track Demy::Track(demy_track *track)
+    _c_tr(track)
+{
+}
+
+demy_track* Demy::Track::GetCPtr()
+{
+    return _c_tr;
+}
+
+
+bool Demy::Track::AddNode(unsigned int time, double value, InterpType interp)
+{
+    return demy_tr_add_node(_c_tr, time, value, interp);
+}
+
+bool Demy::Track::DeleteNode(unsigned int time)
+{
+    return demy_try_del_node(_c_tr, time);
+}
+
+bool Demy::Track::GetNode(unsigned int time, const Node &outNode)
+{
+    const demy_node *node = demy_tr_get_node(_c_tr, time);
+    if(node)
+    {
+        outNode = Demy::Node(node);
+        return true;
+    }
+    return false;
+
 }
 
 #endif
