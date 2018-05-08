@@ -68,6 +68,16 @@ namespace Demy
 
             bool AddNode(unsigned int time, double value, InterpType interp);
             bool DeleteNode(unsigned int time);
+
+            // TODO : this api isn't proper
+            // we need to put a Node on the stack
+            // and we can't do that.
+            // return a tuple?
+
+            struct GetNodeResult
+            {
+                bool Success = false;
+            }
             bool GetNode(unsigned int time, Demy::Node *const outNode) const;
 
             iterator begin() const
