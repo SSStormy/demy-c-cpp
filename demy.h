@@ -1,6 +1,10 @@
 #ifndef DEMY_H
 #define DEMY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct demy_timeline;
 struct demy_track;
 struct demy_node;
@@ -14,7 +18,7 @@ enum interp_t
 
 demy_timeline* demy_tl_new();
 void demy_tl_free(demy_timeline* tl);
-const demy_track* demy_tl_track_get(demy_timeline* tl, const char *name);
+demy_track* demy_tl_track_get(demy_timeline* tl, const char *name);
 bool demy_tl_track_del(demy_timeline *tl, const char *name);
 
 bool demy_tr_add_node(demy_track *track, unsigned int time, double value, interp_t interp);
@@ -34,13 +38,17 @@ demy_node* demy_node_new(unsigned int time, double value, interp_t interp);
 void demy_node_free(demy_node *node);
 
 bool demy_tl_save(demy_timeline *tl, const char* path);
-demy_timeline* demy_tl_load(demy_timeline *tl, const char* path);
+demy_timeline* demy_tl_load(const char* path);
 
-void demy_node_set_interp(demy_node *node, InterpType interp);
-InterpType demy_node_get_interp(demy_node *node);
+void demy_node_set_interp(demy_node *node, interp_t interp);
+interp_t demy_node_get_interp(demy_node *node);
 void demy_node_set_value(demy_node *node, double value);
 double demy_node_get_value(demy_node *node);
 void demy_node_set_time(demy_node *node, unsigned int time);
 unsigned int demy_node_get_time(demy_node *node);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // DEMY_H
