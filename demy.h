@@ -13,52 +13,34 @@ enum interp_t
 };
 
 demy_timeline* demy_tl_new();
-
 void demy_tl_free(demy_timeline* tl);
-
 const demy_track* demy_tl_track_get(demy_timeline* tl, const char *name);
-
 bool demy_tl_track_del(demy_timeline *tl, const char *name);
 
 bool demy_tr_add_node(demy_track *track, unsigned int time, double value, interp_t interp);
-
 bool demy_tr_del_node(demy_track *track, unsigned int time);
+const demy_node* demy_tr_get_node(const demy_track *track, unsigned int time);
 
-const demy_node* demy_tr_get_node(demy_track *track, unsigned int time);
-
-demy_node_iterator* demy_tr_iter_start(demy_track *track);
-
+demy_node_iterator* demy_tr_iter_begin(const demy_track *track);
+demy_node_iterator* demy_tr_iter_end(const demy_track *track);
+void demy_tr_iter_free(demy_node_iterator *iter);
 void demy_tr_iter_next(demy_node_iterator **ptr_to_iter);
-
-void demy_tr_iter_end(demy_node_iterator *iter);
-
-// TODO : rethink iterators
-const demy_node* demy_tr_iter_get(demy_node_iterator *iter);
-
-bool demy_tr_iter_are_eq(demy_node_iterator *a, demy_node_iterator *b);
+const demy_node* demy_tr_iter_get(const demy_node_iterator *iter);
+bool demy_tr_iter_are_eq(const demy_node_iterator *a, const demy_node_iterator *b);
 
 bool demy_node_update_at(demy_track *track, unsigned int time, const demy_node *node);
-
 demy_node* demy_node_clone(const demy_node *node);
-
 demy_node* demy_node_new(unsigned int time, double value, interp_t interp);
-
 void demy_node_free(demy_node *node);
 
-void demy_tl_save(demy_timeline *tl, const char* path);
-
-bool demy_tl_load(demy_timeline *tl, const char* path);
+bool demy_tl_save(demy_timeline *tl, const char* path);
+demy_timeline* demy_tl_load(demy_timeline *tl, const char* path);
 
 void demy_node_set_interp(demy_node *node, InterpType interp);
-
 InterpType demy_node_get_interp(demy_node *node);
-
 void demy_node_set_value(demy_node *node, double value);
-
 double demy_node_get_value(demy_node *node);
-
 void demy_node_set_time(demy_node *node, unsigned int time);
-
 unsigned int demy_node_get_time(demy_node *node);
 
 #endif // DEMY_H
