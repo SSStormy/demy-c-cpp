@@ -49,20 +49,56 @@ TEST(Timelines, SerializeDeserialize)
         track2.AddNode(20, 2.0, InterpType::None);
         track2.AddNode(40, 4.0, InterpType::None);
 
-        tl.Save(save_file);
+        bool result = tl.Save(save_file);
+
+        EXPECT_TRUE(result);
     }
 
     {
-        Timeline tl = Timeline::Load(save_file);
+        auto tl_ptr = Timeline::Load(save_file);
+        EXPECT_NE(tl_ptr, nullptr);
+        Demy::Timeline& tl = *tl_ptr;
 
-        Track track1 = tl.GetTrack(track1_name);
-        Track track2 = tl.GetTrack(track2_name);
 
         {
-            // TODO
-            Node node1;
+            Track track1 = tl.GetTrack(track1_name);
+
+            auto node = track1.GetNode(10);
+            EXPECT_NE(node, nullptr);
+            Node& node1 = *node;
+
+            EXPECT_EQ(node1.GetTime(), 10);
+            EXPECT_EQ(node1.GetValue(), 1.0);
+            EXPECT_EQ(node1.GetInterpolation(), InterpType::Linear);
+
+            node = track1.GetNode(20);
+            EXPECT_NE(node, nullptr);
+            Node& node2 = *node;
+
+            EXPECT_EQ(node2.GetTime(), 20);
+            EXPECT_EQ(node2.GetValue(), 2.0);
+            EXPECT_EQ(node2.GetInterpolation(), InterpType::Linear);
         }
 
+        {
+            Track track2 = tl.GetTrack(track2_name);
+
+            auto node = track2.GetNode(20);
+            EXPECT_NE(node, nullptr);
+            Node& node1 = *node;
+
+            EXPECT_EQ(node1.GetTime(), 20);
+            EXPECT_EQ(node1.GetValue(), 2.0);
+            EXPECT_EQ(node1.GetInterpolation(), InterpType::None);
+
+            node = track2.GetNode(40);
+            EXPECT_NE(node, nullptr);
+            Node& node2 = *node;
+
+            EXPECT_EQ(node2.GetTime(), 40);
+            EXPECT_EQ(node2.GetValue(), 4.0);
+            EXPECT_EQ(node2.GetInterpolation(), InterpType::None);
+        }
     }
 }
 

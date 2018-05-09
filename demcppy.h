@@ -2,6 +2,7 @@
 #define DEMCPPY_H
 
 #include <demy.h> // c-bindings
+#include <memory>
 
 namespace Demy
 {
@@ -21,7 +22,7 @@ namespace Demy
         public:
             Timeline();
             Timeline(demy_timeline *tl) : _c_tl(tl) { }
-            static Timeline* Load(const std::string& filepath);
+            static std::shared_ptr<Timeline> Load(const std::string& filepath);
 
             ~Timeline();
 
@@ -68,17 +69,7 @@ namespace Demy
 
             bool AddNode(unsigned int time, double value, InterpType interp);
             bool DeleteNode(unsigned int time);
-
-            // TODO : this api isn't proper
-            // we need to put a Node on the stack
-            // and we can't do that.
-            // return a tuple?
-
-            struct GetNodeResult
-            {
-                bool Success = false;
-            }
-            bool GetNode(unsigned int time, Demy::Node *const outNode) const;
+            std::shared_ptr<Node> GetNode(unsigned int time) const;
 
             iterator begin() const
             { return iterator(demy_tr_iter_begin(_c_tr)); }
@@ -143,12 +134,10 @@ namespace Demy
         return Node(demy_tr_iter_get(_c_iter), false);
     }
 
-    Timeline* Timeline::Load(const std::string& filepath)
+    std::shared_ptr<Timeline> Timeline::Load(const std::string& filepath)
     {
         demy_timeline *tl = demy_tl_load(filepath.c_str());
-        if(tl)
-            return new Timeline(tl);
-        return nullptr;
+        return tl ? std::make_shared<Timeline>(tl) : nullptr;
     }
 
     bool Timeline::Save(const std::string& filepath) const
@@ -267,18 +256,10 @@ namespace Demy
         return demy_tr_del_node(_c_tr, time);
     }
 
-    bool Track::GetNode(unsigned int time, Node *const outNode) const
+    std::shared_ptr<Node> Track::GetNode(unsigned int time) const
     {
         const demy_node *node = demy_tr_get_node(_c_tr, time);
-        if(node)
-        {
-            if(outNode)
-                *outNode = Node(node, false);
-
-            return true;
-        }
-        return false;
-
+        return node ? std::make_shared<Node>(node, false) : nullptr;
     }
 
 #endif
